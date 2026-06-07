@@ -5,6 +5,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from services.analyzer import analyze
 from services.anomaly import detect
+from services.insights import generate as gen_insights
 
 router = APIRouter()
 
@@ -23,8 +24,12 @@ async def analyze_csv(file: UploadFile = File(...)):
     if df.empty:
         raise HTTPException(status_code=400, detail="The CSV file is empty")
 
+    analysis_result = analyze(df)
+    anomaly_result = detect(df)
+
     return {
         "filename": file.filename,
-        "analysis": analyze(df),
-        "anomalies": detect(df),
+        "analysis": analysis_result,
+        "anomalies": anomaly_result,
+        "insights": gen_insights(analysis_result, anomaly_result),
     }

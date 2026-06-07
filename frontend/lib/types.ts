@@ -50,8 +50,16 @@ export interface AnomalyResult {
   anomaly_sample: Record<string, unknown>[];
 }
 
+export interface Insight {
+  type: string;
+  severity: "error" | "warning" | "info";
+  message: string;
+  columns: string[];
+}
+
 export interface AnalysisResponse {
   filename: string;
   analysis: AnalysisResult;
   anomalies: AnomalyResult;
+  insights: Insight[];
 }
